@@ -42,8 +42,15 @@ export class CronController {
     const endpoints = entries.map(x => {
       let uri = environment.target.substring(0, 34);
       uri = `${uri}/${ uri.split("/").pop() }-${ x.fid }.html`;
-      console.log(uri);
-      return { ...x, uri };
+
+      const webUrl = this.consulService.getRandomServiceUri('rso-web');
+      rp.post(`${ webUrl }/process`,{ json: true, body: {
+          token: request.headers['authorization'],
+          id: x._id,
+          url: uri
+        }});
+
+      return { ...x, uri, id: x._id };
     });
 
     return { job: 'STARTED', endpoints };
