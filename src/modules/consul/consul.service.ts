@@ -132,6 +132,7 @@ export class ConsulService {
   initWatch() {
     this.watchService('rso-store');
     this.watchService('rso-auth');
+    this.watchService('rso-web');
 
     // TEST
     // setTimeout(() => {

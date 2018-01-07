@@ -43,5 +43,3 @@ spec:
             value: "prod"
           - name: DEPLOY_VERSION
             value: "%DEPLOY_VERSION%"
-          - name: LOGZIO_TOKEN
-            value: "eca47bff-b428-4f3a-bb96-06d77ec121c0"
