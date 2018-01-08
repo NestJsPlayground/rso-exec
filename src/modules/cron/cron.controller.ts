@@ -44,11 +44,26 @@ export class CronController {
       uri = `${uri}/${ uri.split("/").pop() }-${ x.fid }.html`;
 
       const webUrl = this.consulService.getRandomServiceUri('rso-web');
+      const orderUrl = this.consulService.getRandomServiceUri('rso-order');
       rp.post(`${ webUrl }/process`,{ json: true, body: {
           token: request.headers['authorization'],
           id: x._id,
           url: uri
         }});
+
+      try {
+        if (orderUrl) {
+          rp.get(`${ orderUrl }`, {
+            json: true, body: {
+              token: request.headers['authorization'],
+              id   : x._id,
+              url  : uri
+            }
+          });
+        }
+      } catch (e) {
+        // ignore CB will handle
+      }
 
       return { ...x, uri, id: x._id };
     });
@@ -89,6 +104,13 @@ export class CronController {
     }
 
     return array;
+  }
+
+
+  @Get('kill')
+  @ApiResponse({ status: 200, description: `Kill app`})
+  async kill(@Req() request) {
+    process.exit(1);
   }
 
   @Get('rebuild')

@@ -29,18 +29,27 @@ export class HealthController {
 
   @Get('/test')
   async testConnection() {
-    let auth;
+    let web;
+    let store;
     const webUrl = this.consulService.getRandomServiceUri('rso-web');
+    const storeUrl = this.consulService.getRandomServiceUri('rso-store');
+
     try {
-      auth = await rp({uri: `${ webUrl }/health`, json: true});
+      web = await rp({uri: `${ webUrl }/health`, json: true});
     } catch (e) {
-      auth = e.message;
+      web = e.message;
+    }
+
+    try {
+      store = await rp({uri: `${ storeUrl }/health`, json: true});
+    } catch (e) {
+      store = e.message;
     }
 
 
     return {
-      auth,
-      webUrl
+      storeUrl,
+      webUrl, web, store
     };
   }
 }
