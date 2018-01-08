@@ -30,9 +30,9 @@ export class HealthController {
   @Get('/test')
   async testConnection() {
     let auth;
-    const authUrl = this.consulService.getRandomServiceUri('rso-auth');
+    const webUrl = this.consulService.getRandomServiceUri('rso-web');
     try {
-      auth = await rp({uri: `${ authUrl }/health`, json: true});
+      auth = await rp({uri: `${ webUrl }/health`, json: true});
     } catch (e) {
       auth = e.message;
     }
@@ -40,7 +40,7 @@ export class HealthController {
 
     return {
       auth,
-      authUrl
+      webUrl
     };
   }
 }
