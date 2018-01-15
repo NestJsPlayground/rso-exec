@@ -113,6 +113,14 @@ export class CronController {
     process.exit(1);
   }
 
+  @Get('simulatefail')
+  @ApiResponse({ status: 200, description: `Kill app`})
+  async simulateFail(@Req() request) {
+    environment.simulateFail = true;
+    return { ok: true }
+  }
+
+
   @Get('rebuild')
   @ApiResponse({ status: 200, description: `Rebuild index`})
   async rebuild(@Req() request) {

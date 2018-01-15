@@ -17,6 +17,8 @@ export const environment = {
     host: process.env.CONSUL_HOST || `consul`
   },
 
+  simulateFail: false,
+
   loggly: {
     token    : process.env.LOGZIO_TOKEN,
     subdomain: 'tilentomakic',

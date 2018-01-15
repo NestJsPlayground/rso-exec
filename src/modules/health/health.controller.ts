@@ -1,4 +1,7 @@
-import { Controller, ForbiddenException, Get, HttpStatus, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller, ForbiddenException, Get, HttpStatus, InternalServerErrorException, Res,
+  UseGuards
+} from '@nestjs/common';
 import { ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { ConsulService } from '../consul/consul.service';
 import { AuthGuard } from '../auth/auth.guard';
@@ -15,16 +18,20 @@ export class HealthController {
   @Get()
   @ApiResponse({ status: 200, description: `Service health is ok.`})
   root() {
-    return {
-      appId: environment.appId,
-      appName: environment.appName,
-      serviceRegistered: ConsulService.serviceRegistered,
-      maintenance: this.consulService.maintenance,
-      api: 'OK',
-      db: mongoose.connection.readyState,
-      deployVersion: environment.deployVersion,
-      serverTime: new Date()
-    };
+    if (environment.simulateFail) {
+      throw new InternalServerErrorException();
+    } else {
+      return {
+        appId            : environment.appId,
+        appName          : environment.appName,
+        serviceRegistered: ConsulService.serviceRegistered,
+        maintenance      : this.consulService.maintenance,
+        api              : 'OK',
+        db               : mongoose.connection.readyState,
+        deployVersion    : environment.deployVersion,
+        serverTime       : new Date()
+      };
+    }
   }
 
   @Get('/test')
